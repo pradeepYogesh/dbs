@@ -20,6 +20,7 @@
 <script type="text/javascript">
 $(function() {
 
+var customMarker;
 
 
 var map;
@@ -100,17 +101,21 @@ function myFunction(locations) {
               }              // The function returns the product of p1 and p2
 }
  function myFunction1(locations) { 
-google.maps.event.addListener(map, 'click', function(event) {
-console.log("Mouse clicked on map,"+event.latLng);
-placeMarker(map, event.latLng);
-});
+          google.maps.event.addListener(map, 'click', function(event) {
+                                      console.log("Mouse clicked on map,"+event.latLng);
+                                      placeMarker(map, event.latLng);
+                                      });
 }
 
 function placeMarker(map, location) {
-var marker = new google.maps.Marker({
-position: location,
-map: map
-});
+          if (customMarker) {
+            customMarker.setMap(null);
+          }
+          customMarker = new google.maps.Marker({
+          position: location,
+          map: map,
+          icon: new google.maps.MarkerImage("http://maps.google.com/mapfiles/ms/icons/blue-dot.png")
+          });
 }
 
 
