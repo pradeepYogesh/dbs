@@ -7,201 +7,70 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCpuuzpRZ3FytGZL_FGkL6UZHuucXqHMko"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.googlemap/1.5/jquery.googlemap.min.js"></script>
-
-
-
-<script type="text/javascript">
-$(function() {
-
-  var customMarker;
-
-
-var map;
-// var map = new google.maps.Map(document.getElementById('map'), {
-//                                                  zoom: 15,
-//                                                  center: new google.maps.LatLng(17.4491,78.377861),
-//                                                  mapTypeId: google.maps.MapTypeId.ROADMAP
-//                                             });
-
-var locations = [
-
-];
-
-
-
-  $
-        .ajax({
-          type : 'GET',
-          url : 'http://127.0.0.1:8080/recomend',
-          dataType : 'json',
-          success : function(response) {
-            //console.log('Whole Data:' + JSON.stringify(response));
-
-            console.log('so: ', response.data);
-            var dataInfo=response.data;
-
-            for(var i=0;i<dataInfo.length;i++){
-               console.log('Data:: ',dataInfo[i]);
-               var info=dataInfo[i];
-              locations.push(info);
-
-            }
-            //17.449,78.37786
-             console.log('locations: ', locations);
-             myFunction(locations);
-             myFunction1();
-
-
-
-          }
-          ,
-          error : function(xhr) {
-            console.log('Tab count: error');
-            //Do Something to handle error
-            //document.alert("Wrong data")
-          }
-
-        });//end of ajax call
-
-function myFunction(locations) {
-
-             map = new google.maps.Map(document.getElementById('map'), {
-                                                 zoom: 15,
-                                                 center: new google.maps.LatLng(17.4491,78.377861),
-                                                 mapTypeId: google.maps.MapTypeId.ROADMAP
-                                            });
-
-
-
-            var infowindow = new google.maps.InfoWindow;
-
-            var marker, i;
-
-            for (i = 0; i < locations.length; i++) {
-               console.log('locations:============>>>> ', locations[i]);
-                marker = new google.maps.Marker({
-
-                     position: new google.maps.LatLng(locations[i][1], locations[i][2]),
-                     map: map
-                });
-
-                google.maps.event.addListener(marker, 'click', (function(marker, i) {
-                     return function() {
-                         infowindow.setContent(locations[i][0]);
-                         infowindow.open(map, marker);
-                     }
-                })(marker, i));
-              }              // The function returns the product of p1 and p2
-}
- function myFunction1(locations) {
-          google.maps.event.addListener(map, 'click', function(event) {
-                                      console.log("Mouse clicked on map,"+event.latLng);
-                                      placeMarker(map, event.latLng);
-                                      });
-}
-
-function placeMarker(map, location) {
-          if (customMarker) {
-            customMarker.setMap(null);
-          }
-          customMarker = new google.maps.Marker({
-          position: location,
-          map: map,
-          icon: new google.maps.MarkerImage("http://maps.google.com/mapfiles/ms/icons/blue-dot.png")
-          });
-}
-
-
-
-});
-
-</script>
-
-
-
-
+<script src="./main.js"></script>
+<title>DBS Hack2Hire</title>
 <style>
-html, body, #map-canvas  {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-}
+  html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    margin-bottom: 200px;
+  }
+  #map {
+    height: 500px;
+    width: 600px;
+  }
+  #left {
+    height: 550px;
+  }
 
-#map-canvas {
-  width:500px;
-  height:480px;
-}
+  footer {
+    padding: 10px;
+    color: #efefef;
+    background: #111;
+    text-align: center;
+    position: absolute;
+    bottom: 0;
+  }
 
 </style>
-
-
-
-
-
 </head>
-
 <body >
-
-	<nav class="navbar navbar-inverse">
-  <div class="container-fluid">
-    <div class="navbar-header">
-      <a class="navbar-brand" href="#">Recomendatation System</a>
+  <nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <a class="navbar-brand" href="#">Recomendatation System</a>
+      </div>
+      <ul class="nav navbar-nav">
+        <li class="active"><a href="#">Home</a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="#"><span class="glyphicon glyphicon-user"></span> Hi User 1234</a></li>
+        <li><a href="#"><span class="glyphicon glyphicon-log-out"></span> LogOut</a></li>
+      </ul>
     </div>
-    <ul class="nav navbar-nav">
-      <li class="active"><a href="#">Home</a></li>
+  </nav>
 
-    </ul>
-    <ul class="nav navbar-nav navbar-right">
-      <li><a href="#"><span class="glyphicon glyphicon-user"></span> Hi User 1234</a></li>
-      <li><a href="#"><span class="glyphicon glyphicon-log-out"></span> LogOut</a></li>
-    </ul>
+  <div class="row">
+    <div class="col-sm-6">
+      <div class="panel panel-default" id="left">
+        <div class="panel-body">
+          <button class="btn-small btn btn-default" id="btn-nearby" disabled>
+            Show locations in this area
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6">
+      <div class="panel panel-default">
+        <div class="panel-body">
+          <div id="map"> </div>
+        </div>
+      </div>
+    </div>
   </div>
-</nav>
-
-  <ul class="nav nav-tabs">
-    <li class="active"><a data-toggle="tab" href="#home">Home</a></li>
-    <li><a data-toggle="tab" href="#menu1">Visit a place</a></li>
-    <li><a data-toggle="tab" href="#menu2">Rate a place</a></li>
-
-  </ul>
-
-  <div class="tab-content">
-    <div id="home" class="tab-pane fade in active">
-      <h3>HOME</h3>
-      <p>Recomended places for you</p>
-    </div>
-    <div id="menu1" class="tab-pane fade">
-      <h3>Visit A Place</h3>
-      <p>Click on the place you need to visit</p>
-    </div>
-    <div id="menu2" class="tab-pane fade">
-      <h3>Rate A Place</h3>
-      <p>Please select a place and Rate it</p>
-    </div>
-
-  </div>
-
-<div class="row">
-<div class="col-sm-3">
-</div>
-
-<div class="col-sm-6">
-<div id="map" style="width: 700px; height: 500px;">
-
-</div>
-
-<div class="col-sm-3">
-</div>
-
-</div>
-
-
-
-
-
-
-<footer class="navbar-fixed-bottom">
+  <footer class="navbar-fixed-bottom">
     <p>© 2017 -DBS Hack2Hire</p>
-</footer>
+  </footer>
 </body>
 </html>

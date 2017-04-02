@@ -54,13 +54,14 @@ class RecomendationWebService(object):
 
     def DELETE(self):
         return "HI11"
- 
-   
-        
+
+
 if __name__ == '__main__':
     conf = {
         '/': {
             'tools.sessions.on': False,
+            'tools.staticdir.on': True,
+            'tools.staticdir.dir': os.path.abspath(os.path.dirname(__file__)),
             'tools.staticdir.root': os.path.abspath(os.getcwd())
         },
         '/recomend': {
